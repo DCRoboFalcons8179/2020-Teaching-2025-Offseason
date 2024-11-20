@@ -16,4 +16,20 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class DriveSettings {
+    public static final double maxSpeed = 0.5;
+
+    // Motor IDs
+    public static final int leftFollowerID = 13;
+    public static final int leftDriveID = 2;
+    public static final int rightFollowerID = 14;
+    public static final int rightDriveID = 4;
+
+    // Inverts
+    public static final boolean leftFollowerInverted = true;
+    public static final boolean leftDriveInverted = true;
+    public static final boolean rightFollowerInverted = false;
+    public static final boolean rightDriveInverted = false;
+  }
 }
