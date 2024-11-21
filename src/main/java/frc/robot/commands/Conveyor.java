@@ -7,24 +7,17 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.lib.math.Filter;
-import frc.robot.subsystems.Move;
+import frc.robot.subsystems.SubConveyor;
 
-public class Drive extends Command {
-  private DoubleSupplier speedPower;
-  private DoubleSupplier turnPower;
-  private Move move;
+public class Conveyor extends Command {
+  private DoubleSupplier power;
+  private SubConveyor subConveyor;
+  /** Creates a new Conveyor. */
+  public Conveyor(DoubleSupplier power, SubConveyor subConveyor) {
+    this.power = power;
+    this.subConveyor = subConveyor;
 
-
-  /** Creates a new Drive. */
-  public Drive(DoubleSupplier speedPower, DoubleSupplier turnPower, Move move) {
-    this.speedPower = speedPower;
-    this.turnPower = turnPower;
-    this.move = move;
-
-    addRequirements(move);
-
+    addRequirements(subConveyor);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -35,13 +28,9 @@ public class Drive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    move.driveRobot(
-      Filter.deadBand(speedPower.getAsDouble(), 0.03) * Constants.DriveConstants.maxSpeed,
-      Filter.deadBand(turnPower.getAsDouble(), 0.03) * Constants.DriveConstants.turnSpeed
+    subConveyor.driveConveyor(
+      power.getAsDouble()
     );
-    
-    
   }
 
   // Called once the command ends or is interrupted.

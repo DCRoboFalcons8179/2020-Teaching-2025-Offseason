@@ -10,21 +10,22 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.math.Filter;
 import frc.robot.Constants;
 
 public class Move extends SubsystemBase {
-  VictorSPX leftFollower = new VictorSPX(Constants.DriveSettings.leftFollowerID);
-  VictorSPX rightFollower = new VictorSPX(Constants.DriveSettings.rightFollowerID);
-  TalonSRX leftDrive = new TalonSRX(Constants.DriveSettings.leftDriveID);
-  TalonSRX rightDrive = new TalonSRX(Constants.DriveSettings.rightDriveID);
+  VictorSPX leftFollower = new VictorSPX(Constants.DriveConstants.leftFollowerID);
+  VictorSPX rightFollower = new VictorSPX(Constants.DriveConstants.rightFollowerID);
+  TalonSRX leftDrive = new TalonSRX(Constants.DriveConstants.leftDriveID);
+  TalonSRX rightDrive = new TalonSRX(Constants.DriveConstants.rightDriveID);
   /** Creates a new Move. */
   public Move() {
 
-    leftDrive.setInverted(Constants.DriveSettings.leftDriveInverted);
-    leftFollower.setInverted(Constants.DriveSettings.leftFollowerInverted);
+    leftDrive.setInverted(Constants.DriveConstants.leftDriveInverted);
+    leftFollower.setInverted(Constants.DriveConstants.leftFollowerInverted);
 
-    rightDrive.setInverted(Constants.DriveSettings.rightDriveInverted);
-    rightFollower.setInverted(Constants.DriveSettings.rightFollowerInverted);
+    rightDrive.setInverted(Constants.DriveConstants.rightDriveInverted);
+    rightFollower.setInverted(Constants.DriveConstants.rightFollowerInverted);
   }
 
   @Override
@@ -33,11 +34,13 @@ public class Move extends SubsystemBase {
   }
   
   public void driveRobot(double speedPower, double turnPower) {
-    leftDrive.set(TalonSRXControlMode.PercentOutput, speedPower);
-    rightDrive.set(TalonSRXControlMode.PercentOutput, speedPower);
+    leftDrive.set(TalonSRXControlMode.PercentOutput, Filter.cutoffFilter(speedPower - turnPower));
+    rightDrive.set(TalonSRXControlMode.PercentOutput, Filter.cutoffFilter(speedPower + turnPower));
+    
     leftFollower.follow(leftDrive);
     rightFollower.follow(rightDrive);
-
     SmartDashboard.putNumber("Speed", speedPower);
+    SmartDashboard.putNumber("Turn", turnPower);
+    
   }
 }
