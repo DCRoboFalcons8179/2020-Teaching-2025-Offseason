@@ -14,10 +14,10 @@ import frc.robot.Constants;
 public class SubConveyor extends SubsystemBase {
   /** Creates a new SubConveyor. */
   
-  TalonFX conveyorMotor = new TalonFX(Constants.ConveyorConstants.conveyorMotorID);
-  VictorSPX beaterBar = new VictorSPX(Constants.ConveyorConstants.conveyorMotorID); 
+  TalonFX beaterBar = new TalonFX(Constants.ConveyorConstants.beaterBarID);
+  VictorSPX conveyorMotor = new VictorSPX(Constants.ConveyorConstants.conveyorMotorID); 
   
-  public SubConveyor(double power) {}
+  public SubConveyor() {}
 
   @Override
   public void periodic() {
@@ -25,7 +25,7 @@ public class SubConveyor extends SubsystemBase {
   }
 
   public void driveConveyor(double power) {
-    conveyorMotor.set(Filter.cutoffFilter(power));
-    beaterBar.set(VictorSPXControlMode.PercentOutput, Filter.cutoffFilter(power));
+    beaterBar.set(Filter.cutoffFilter(power));
+    conveyorMotor.set(VictorSPXControlMode.PercentOutput, Filter.cutoffFilter(power));
   }
 }

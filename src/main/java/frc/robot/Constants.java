@@ -35,9 +35,19 @@ public final class Constants {
   }
 
   public static class ConveyorConstants {
-    
     //Motor IDs
     public static final int beaterBarID = 11;
     public static final int conveyorMotorID = 3;
+  }
+
+  public static class ShooterConstants {
+    public static final int leftShooterID = 8;
+    public static final boolean leftShooterInverted = true;
+
+    public static final int rightShooterID = 7;
+    public static final boolean rightShooterInverted = false;
+
+    public static final int tiltMotorID = 6;
+  
   }
 }

@@ -5,15 +5,19 @@
 package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.Autos;
+import frc.robot.commands.Conveyor;
 import frc.robot.commands.Drive;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.Tilt;
 import frc.robot.subsystems.Move;
+import frc.robot.subsystems.SubConveyor;
+import frc.robot.subsystems.SubShooter;
 import frc.lib.math.Filter;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -24,13 +28,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Move move = new Move();
+  private final SubConveyor subConveyor = new SubConveyor();
+  private final SubShooter subShooter = new SubShooter();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(ControllerConstants.kDriverControllerPort);
-
-   Move move = new Move();
+  // Controller bindings
+  private final Joystick m_driverController =
+      new Joystick(ControllerConstants.kDriverControllerPort);
+    
+  private final JoystickButton aButton = new JoystickButton(m_driverController, XboxController.Button.kA.value);   
+  private final JoystickButton xButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+  private final JoystickButton yButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+  private final JoystickButton bButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -58,13 +67,23 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // A button
+    aButton.whileTrue(new Conveyor(() -> 0.75, subConveyor));
+    aButton.whileFalse(new Conveyor(() -> 0, subConveyor));
+    
+    
+    // X Button
+    xButton.whileTrue(new Shoot(() -> 0.5, subShooter));
+    xButton.whileFalse(new Shoot(() -> 0, subShooter));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // Tilt Up
+    yButton.whileTrue(new Tilt(() -> 0.25, subShooter));
+    yButton.whileFalse(new Tilt(() -> 0, subShooter));
+
+    // Tilt Down
+    bButton.whileTrue(new Tilt(() -> -0.25, subShooter));
+    bButton.whileFalse(new Tilt(() -> 0, subShooter));
+    
   }
 
   /**
@@ -74,6 +93,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return null;
   }
 }
