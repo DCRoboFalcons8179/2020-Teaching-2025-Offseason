@@ -13,8 +13,12 @@ import frc.robot.subsystems.Move;
 import frc.robot.subsystems.SubConveyor;
 import frc.robot.subsystems.SubShooter;
 import frc.lib.math.Filter;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogTrigger;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -35,7 +39,9 @@ public class RobotContainer {
   // Controller bindings
   private final Joystick m_driverController =
       new Joystick(ControllerConstants.kDriverControllerPort);
-    
+
+  DigitalInput topButton = new DigitalInput(3);
+  Trigger topTrigger = new Trigger(() -> topButton.get());
   private final JoystickButton aButton = new JoystickButton(m_driverController, XboxController.Button.kA.value);   
   private final JoystickButton xButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
   private final JoystickButton yButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
@@ -84,6 +90,10 @@ public class RobotContainer {
     bButton.whileTrue(new Tilt(() -> -0.25, subShooter));
     bButton.whileFalse(new Tilt(() -> 0, subShooter));
     
+    // When top button pressed, shoot go
+    topTrigger.whileFalse(new Shoot(() -> 1, subShooter));
+    topTrigger.whileTrue(new Shoot(() -> 0, subShooter));
+
   }
 
   /**
