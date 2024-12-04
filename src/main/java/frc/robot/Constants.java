@@ -48,6 +48,12 @@ public final class Constants {
     public static final boolean rightShooterInverted = false;
 
     public static final int tiltMotorID = 6;
+
+    public static final int feedBackSensor = 0;
   
+    public static final double kP = 0.2;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kF = 0.04;
   }
 }

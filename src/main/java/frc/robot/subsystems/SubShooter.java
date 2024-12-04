@@ -20,6 +20,8 @@ public class SubShooter extends SubsystemBase {
   
   /** Creates a new SubShooter. */
   public SubShooter() {
+    rightShooter.config_kP(0, Constants.ShooterConstants.kP);
+    rightShooter.config_kI(0, Constants.ShooterConstants.kI);
     leftShooter.setInverted(Constants.ShooterConstants.leftShooterInverted);
     rightShooter.setInverted(Constants.ShooterConstants.rightShooterInverted);
   }
@@ -37,4 +39,5 @@ public class SubShooter extends SubsystemBase {
   public void tiltShooters (double power) {
     tiltMotor.set(Filter.cutoffFilter(power));
   }
+
 }

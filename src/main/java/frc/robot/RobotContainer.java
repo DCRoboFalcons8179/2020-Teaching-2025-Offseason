@@ -13,6 +13,7 @@ import frc.robot.subsystems.Move;
 import frc.robot.subsystems.SubConveyor;
 import frc.robot.subsystems.SubShooter;
 import frc.lib.math.Filter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,15 +32,22 @@ public class RobotContainer {
   private final Move move = new Move();
   private final SubConveyor subConveyor = new SubConveyor();
   private final SubShooter subShooter = new SubShooter();
-
+  
+private final DigitalInput bottomButton = new DigitalInput(1);
+private final DigitalInput middleButton = new DigitalInput(2);
+private final DigitalInput topButton = new DigitalInput(3);
+Trigger topTrigger = new Trigger(() -> topButton.get());
+Trigger middleTrigger = new Trigger(() -> middleButton.get());
+Trigger bottomTrigger = new Trigger(() -> bottomButton.get());
   // Controller bindings
   private final Joystick m_driverController =
       new Joystick(ControllerConstants.kDriverControllerPort);
-    
+   
   private final JoystickButton aButton = new JoystickButton(m_driverController, XboxController.Button.kA.value);   
   private final JoystickButton xButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
   private final JoystickButton yButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
   private final JoystickButton bButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -84,7 +92,17 @@ public class RobotContainer {
     bButton.whileTrue(new Tilt(() -> -0.25, subShooter));
     bButton.whileFalse(new Tilt(() -> 0, subShooter));
     
+    topTrigger.whileFalse(new Shoot(() -> 0.6, subShooter));
+    topTrigger.whileTrue(new Shoot(() -> 0, subShooter));
+
+    middleTrigger.whileFalse(new Shoot(() -> 0.4, subShooter));
+    middleTrigger.whileTrue(new Shoot(() -> 0, subShooter));
+
+    bottomTrigger.whileFalse(new Shoot(() -> 0.2, subShooter));
+    bottomTrigger.whileTrue(new Shoot(() -> 0, subShooter)); 
   }
+
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
