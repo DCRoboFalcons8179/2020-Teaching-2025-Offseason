@@ -13,6 +13,7 @@ import frc.robot.subsystems.Move;
 import frc.robot.subsystems.SubConveyor;
 import frc.robot.subsystems.SubShooter;
 import frc.lib.math.Filter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +41,8 @@ public class RobotContainer {
   private final JoystickButton xButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
   private final JoystickButton yButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
   private final JoystickButton bButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+  private final DigitalInput conveyorTop = new DigitalInput(3);
+  private final Trigger conveyorTrigger = new Trigger(() -> conveyorTop.get());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -83,7 +86,13 @@ public class RobotContainer {
     // Tilt Down
     bButton.whileTrue(new Tilt(() -> -0.25, subShooter));
     bButton.whileFalse(new Tilt(() -> 0, subShooter));
-    
+
+    //stop converoey
+    conveyorTrigger.whileFalse(new Conveyor(() -> 0.75, subConveyor));
+    conveyorTrigger.whileTrue(new Conveyor(() -> 0, subConveyor));
+
+
+
   }
 
   /**
