@@ -8,6 +8,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.Conveyor;
 import frc.robot.commands.Drive;
 import frc.robot.commands.Shoot;
+import frc.robot.commands.SmartShoot;
 import frc.robot.commands.Tilt;
 import frc.robot.subsystems.Move;
 import frc.robot.subsystems.SubConveyor;
@@ -79,7 +80,6 @@ Trigger bottomTrigger = new Trigger(() -> bottomButton.get());
     aButton.whileTrue(new Conveyor(() -> 0.75, subConveyor));
     aButton.whileFalse(new Conveyor(() -> 0, subConveyor));
     
-    
     // X Button
     xButton.whileTrue(new Shoot(() -> 0.5, subShooter));
     xButton.whileFalse(new Shoot(() -> 0, subShooter));
@@ -92,13 +92,13 @@ Trigger bottomTrigger = new Trigger(() -> bottomButton.get());
     bButton.whileTrue(new Tilt(() -> -0.25, subShooter));
     bButton.whileFalse(new Tilt(() -> 0, subShooter));
     
-    topTrigger.whileFalse(new Shoot(() -> 0.6, subShooter));
-    topTrigger.whileTrue(new Shoot(() -> 0, subShooter));
+    topTrigger.whileFalse(new SmartShoot(subShooter, () -> topButton.get(), subConveyor));
+    topTrigger.whileTrue(new SmartShoot(subShooter, () -> topButton.get(), subConveyor));
 
-    middleTrigger.whileFalse(new Shoot(() -> 0.4, subShooter));
+    middleTrigger.whileFalse(new Shoot(() -> 0.6, subShooter));
     middleTrigger.whileTrue(new Shoot(() -> 0, subShooter));
 
-    bottomTrigger.whileFalse(new Shoot(() -> 0.2, subShooter));
+    bottomTrigger.whileFalse(new Shoot(() -> 0.3, subShooter));
     bottomTrigger.whileTrue(new Shoot(() -> 0, subShooter)); 
   }
 

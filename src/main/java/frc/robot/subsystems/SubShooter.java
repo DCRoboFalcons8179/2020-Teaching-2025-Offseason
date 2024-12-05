@@ -7,23 +7,29 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.lib.math.Filter;
+import frc.robot.commands.Conveyor;
+// import frc.robot.commands.Conveyor;
 
 public class SubShooter extends SubsystemBase {
 
   TalonSRX rightShooter = new TalonSRX (Constants.ShooterConstants.rightShooterID);
   TalonSRX leftShooter = new TalonSRX (Constants.ShooterConstants.leftShooterID);
   TalonFX tiltMotor = new TalonFX (Constants.ShooterConstants.tiltMotorID);
+  double velocity = rightShooter.getSelectedSensorVelocity();
+  private final SubConveyor subConveyor = new SubConveyor();
   
   /** Creates a new SubShooter. */
   public SubShooter() {
     rightShooter.config_kP(0, Constants.ShooterConstants.kP);
     rightShooter.config_kI(0, Constants.ShooterConstants.kI);
-    leftShooter.setInverted(Constants.ShooterConstants.leftShooterInverted);
+    rightShooter.config_kD(0, Constants.ShooterConstants.kD);
+    rightShooter.config_kF(0, Constants.ShooterConstants.kF);
     rightShooter.setInverted(Constants.ShooterConstants.rightShooterInverted);
+    leftShooter.setInverted(Constants.ShooterConstants.leftShooterInverted);
   }
 
   @Override
@@ -40,4 +46,7 @@ public class SubShooter extends SubsystemBase {
     tiltMotor.set(Filter.cutoffFilter(power));
   }
 
+  public double getVelocity() {
+      return velocity;
+  }
 }
