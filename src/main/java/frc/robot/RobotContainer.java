@@ -13,12 +13,9 @@ import frc.robot.subsystems.Move;
 import frc.robot.subsystems.SubConveyor;
 import frc.robot.subsystems.SubShooter;
 import frc.lib.math.Filter;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -41,12 +38,14 @@ public class RobotContainer {
       new Joystick(ControllerConstants.kDriverControllerPort);
 
   DigitalInput topButton = new DigitalInput(3);
-  Trigger topTrigger = new Trigger(() -> topButton.get());
   private final JoystickButton aButton = new JoystickButton(m_driverController, XboxController.Button.kA.value);   
   private final JoystickButton xButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
   private final JoystickButton yButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
   private final JoystickButton bButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
-
+  private final JoystickButton leftBumper = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+  
+  Trigger topTrigger = new Trigger(() -> (topButton.get() || xButton.getAsBoolean()));
+  Trigger reverseTrigger = new Trigger(() -> (leftBumper.getAsBoolean() || aButton.getAsBoolean()));
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -94,6 +93,9 @@ public class RobotContainer {
     topTrigger.whileFalse(new Shoot(() -> 1, subShooter));
     topTrigger.whileTrue(new Shoot(() -> 0, subShooter));
 
+
+    reverseTrigger.whileTrue(new Conveyor(() -> -1, subConveyor));
+    reverseTrigger.whileFalse(new Conveyor(() -> 0, subConveyor));
   }
 
   /**
