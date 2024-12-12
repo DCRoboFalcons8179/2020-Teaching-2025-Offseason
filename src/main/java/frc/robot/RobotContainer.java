@@ -38,6 +38,8 @@ public class RobotContainer {
       new Joystick(ControllerConstants.kDriverControllerPort);
 
   DigitalInput topButton = new DigitalInput(3);
+  DigitalInput midButton = new DigitalInput(2);
+  DigitalInput botButton = new DigitalInput(1);
   private final JoystickButton aButton = new JoystickButton(m_driverController, XboxController.Button.kA.value);   
   private final JoystickButton xButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
   private final JoystickButton yButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
